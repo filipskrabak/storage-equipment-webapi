@@ -1,0 +1,6 @@
+internal/storage_equipment/README.md
+internal/storage_equipment/api_equipment_management.go
+internal/storage_equipment/model_equipment_create.go
+internal/storage_equipment/model_equipment_item.go
+internal/storage_equipment/model_equipment_update.go
+internal/storage_equipment/routers.go

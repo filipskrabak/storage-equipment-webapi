@@ -1,0 +1,8 @@
+generatorName: go-gin-server
+outputDir: /local
+inputSpec: /local/api/storage-equipment.openapi.yaml
+enablePostProcessFile: true
+additionalProperties:
+  apiPath: internal/storage_equipment
+  packageName: storage_equipment
+  interfaceOnly: true
