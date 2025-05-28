@@ -1,0 +1,326 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Storage Equipment management for hospital
+  version: "1.0.0"
+  title: Hospital Equipment Management API
+  contact:
+    email: xskrabakf@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+  - name: equipmentManagement
+    description: Hospital Equipment Management API
+
+paths:
+  "/equipment":
+    get:
+      tags:
+        - equipmentManagement
+      summary: Get all equipment
+      operationId: getAllEquipment
+      description: Returns list of all hospital equipment
+      responses:
+        "200":
+          description: List of all equipment items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EquipmentItem"
+              examples:
+                response:
+                  $ref: "#/components/examples/EquipmentListExample"
+    post:
+      tags:
+        - equipmentManagement
+      summary: Add new equipment
+      operationId: createEquipment
+      description: Add new equipment to the system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipmentCreate"
+            examples:
+              equipment:
+                $ref: "#/components/examples/EquipmentCreateExample"
+      responses:
+        "201":
+          description: Equipment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentItem"
+        "400":
+          description: Invalid input
+
+  "/equipment/{equipmentId}":
+    get:
+      tags:
+        - equipmentManagement
+      summary: Get equipment by ID
+      operationId: getEquipmentById
+      description: Returns specific equipment item by ID
+      parameters:
+        - in: path
+          name: equipmentId
+          description: ID of the equipment item
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Equipment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentItem"
+        "404":
+          description: Equipment not found
+
+    put:
+      tags:
+        - equipmentManagement
+      summary: Update equipment
+      operationId: updateEquipment
+      description: Update existing equipment information
+      parameters:
+        - in: path
+          name: equipmentId
+          description: ID of the equipment to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipmentUpdate"
+            examples:
+              equipment:
+                $ref: "#/components/examples/EquipmentUpdateExample"
+      responses:
+        "200":
+          description: Equipment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentItem"
+        "400":
+          description: Invalid input
+        "404":
+          description: Equipment not found
+
+    delete:
+      tags:
+        - equipmentManagement
+      summary: Delete equipment
+      operationId: deleteEquipment
+      description: Remove equipment from the system
+      parameters:
+        - in: path
+          name: equipmentId
+          description: ID of the equipment to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Equipment deleted successfully
+        "404":
+          description: Equipment not found
+
+components:
+  schemas:
+    EquipmentItem:
+      type: object
+      required:
+        - id
+        - name
+        - serialNumber
+        - manufacturer
+        - installationDate
+        - location
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Name of the equipment
+        serialNumber:
+          type: string
+          description: Serial number of the equipment
+        manufacturer:
+          type: string
+          description: Manufacturer of the equipment
+        model:
+          type: string
+          description: Model of the equipment
+        installationDate:
+          type: string
+          format: date
+          description: Date when equipment was installed
+        location:
+          type: string
+          description: Location of the equipment in the hospital
+        serviceInterval:
+          type: integer
+          description: Service interval in days
+        lastService:
+          type: string
+          format: date
+          description: Date of last service
+        nextService:
+          type: string
+          format: date
+          description: Date of next scheduled service
+        lifeExpectancy:
+          type: integer
+          description: Life expectancy in years
+        status:
+          type: string
+          enum: [operational, in_repair, faulty, decommissioned]
+          default: operational
+        notes:
+          type: string
+          description: Additional notes about the equipment
+
+    EquipmentCreate:
+      type: object
+      required:
+        - name
+        - serialNumber
+        - manufacturer
+        - installationDate
+        - location
+      properties:
+        name:
+          type: string
+          description: Name of the equipment
+        serialNumber:
+          type: string
+          description: Serial number of the equipment
+        manufacturer:
+          type: string
+          description: Manufacturer of the equipment
+        model:
+          type: string
+          description: Model of the equipment
+        installationDate:
+          type: string
+          format: date
+          description: Date when equipment was installed
+        location:
+          type: string
+          description: Location of the equipment in the hospital
+        serviceInterval:
+          type: integer
+          description: Service interval in days
+        lastService:
+          type: string
+          format: date
+          description: Date of last service
+        lifeExpectancy:
+          type: integer
+          description: Life expectancy in years
+        status:
+          type: string
+          enum: [operational, in_repair, faulty, decommissioned]
+          default: operational
+        notes:
+          type: string
+          description: Additional notes about the equipment
+
+    EquipmentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the equipment
+        serialNumber:
+          type: string
+          description: Serial number of the equipment
+        manufacturer:
+          type: string
+          description: Manufacturer of the equipment
+        model:
+          type: string
+          description: Model of the equipment
+        location:
+          type: string
+          description: Location of the equipment in the hospital
+        serviceInterval:
+          type: integer
+          description: Service interval in days
+        lastService:
+          type: string
+          format: date
+          description: Date of last service
+        lifeExpectancy:
+          type: integer
+          description: Life expectancy in years
+        status:
+          type: string
+          enum: [operational, in_repair, faulty, decommissioned]
+        notes:
+          type: string
+          description: Additional notes about the equipment
+
+  examples:
+    EquipmentListExample:
+      value:
+        - id: "123e4567-e89b-12d3-a456-426614174000"
+          name: "MRI Scanner"
+          serialNumber: "MRI-2023-001"
+          manufacturer: "GE Healthcare"
+          model: "SIGNA Architect"
+          installationDate: "2023-01-15"
+          location: "Radiology Department, Room 3"
+          serviceInterval: 90
+          lastService: "2023-03-15"
+          nextService: "2023-06-13"
+          lifeExpectancy: 10
+          status: "operational"
+          notes: "3T MRI scanner, installed by technician John Doe"
+        - id: "223e4567-e89b-12d3-a456-426614174001"
+          name: "X-Ray Machine"
+          serialNumber: "XR-2022-105"
+          manufacturer: "Siemens Healthineers"
+          model: "Ysio Max"
+          installationDate: "2022-06-20"
+          location: "Emergency Department, Room 5"
+          serviceInterval: 60
+          lastService: "2023-04-20"
+          nextService: "2023-06-19"
+          lifeExpectancy: 8
+          status: "operational"
+          notes: "Digital X-ray system"
+
+    EquipmentCreateExample:
+      value:
+        name: "CT Scanner"
+        serialNumber: "CT-2023-042"
+        manufacturer: "Philips"
+        model: "Incisive CT"
+        installationDate: "2023-04-10"
+        location: "Radiology Department, Room 5"
+        serviceInterval: 120
+        lastService: "2023-04-10"
+        lifeExpectancy: 12
+        status: "operational"
+        notes: "High-end CT scanner with reduced radiation dose"
+
+    EquipmentUpdateExample:
+      value:
+        location: "Radiology Department, Room 6"
+        lastService: "2023-05-15"
+        status: "in_repair"
+        notes: "Moved to Room 6. Currently being serviced due to calibration issues."
