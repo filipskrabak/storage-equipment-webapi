@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        pod: steq-storage-equipment-label
+        pod: steq-storage-equipment-webapi-label
     spec:
       volumes:
       - name: init-scripts
