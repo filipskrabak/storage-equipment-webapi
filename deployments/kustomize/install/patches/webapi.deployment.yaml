@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: steq-storage-equipment
+  name: steq-storage-equipment-webapi
 spec:
   template:
     spec:

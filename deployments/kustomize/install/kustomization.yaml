@@ -19,4 +19,4 @@ patches:
     group: apps
     version: v1
     kind: Deployment
-    name: steq-storage-equipment
+    name: steq-storage-equipment-webapi
