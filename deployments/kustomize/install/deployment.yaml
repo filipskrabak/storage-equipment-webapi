@@ -32,9 +32,9 @@ spec:
           - name: AMBULANCE_API_MONGODB_PORT
             value: "27017"
           - name: AMBULANCE_API_MONGODB_USERNAME
-            value: "root"
+            value: ""
           - name: AMBULANCE_API_MONGODB_PASSWORD
-            value: "neUhaDnes"
+            value: ""
           - name: AMBULANCE_API_MONGODB_DATABASE
             valueFrom:
               configMapKeyRef:
@@ -72,10 +72,10 @@ spec:
             value: "27017"
             # change to actual value
           - name: AMBULANCE_API_MONGODB_USERNAME
-            value: "root"
+            value: ""
             #change to actual value
           - name: AMBULANCE_API_MONGODB_PASSWORD
-            value: "neUhaDnes"
+            value: ""
           - name: AMBULANCE_API_MONGODB_DATABASE
             valueFrom:
               configMapKeyRef:
