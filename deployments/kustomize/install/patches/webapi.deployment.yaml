@@ -33,7 +33,7 @@ spec:
                   name: mongodb-auth
                   key: password
       containers:
-        - name: steq-storage-equipment-container
+        - name: steq-storage-equipment-webapi-container
           env:
             - name: AMBULANCE_API_MONGODB_HOST
               value: null
