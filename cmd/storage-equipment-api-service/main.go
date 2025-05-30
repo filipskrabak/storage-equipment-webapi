@@ -25,7 +25,7 @@ func main() {
 	if !strings.EqualFold(environment, "production") { // case insensitive comparison
 		gin.SetMode(gin.DebugMode)
 	}
-	engine := gin.New()
+	engine := gin.Default()
 	engine.Use(gin.Recovery())
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
@@ -56,7 +56,7 @@ func main() {
 	// request routings
 	handleFunctions := &storage_equipment.ApiHandleFunctions{
 		EquipmentManagementAPI: storage_equipment.NewEquipmentManagementApi(),
-		EquipmentOrdersAPI:    storage_equipment.NewEquipmentOrdersApi(),
+		EquipmentOrdersAPI:     storage_equipment.NewEquipmentOrdersApi(),
 	}
 	storage_equipment.NewRouterWithGinEngine(engine, *handleFunctions)
 	engine.GET("/openapi", api.HandleOpenApi)
