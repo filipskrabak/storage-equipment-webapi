@@ -39,7 +39,7 @@ func main() {
 
 	// setup context update  middleware
 	equipmentDbService := db_service.NewMongoService[storage_equipment.EquipmentItem](db_service.MongoServiceConfig{
-		Collection: "equipment"
+		Collection: "equipment",
 	})
 	defer equipmentDbService.Disconnect(context.Background())
 
