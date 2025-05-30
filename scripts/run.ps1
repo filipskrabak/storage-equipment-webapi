@@ -10,8 +10,8 @@ $ProjectRoot = "${PSScriptRoot}/.."
 
 $env:AMBULANCE_API_ENVIRONMENT="Development"
 $env:AMBULANCE_API_PORT="5000"
-$env:AMBULANCE_API_MONGODB_USERNAME="admin"
-$env:AMBULANCE_API_MONGODB_PASSWORD="admin"
+$env:AMBULANCE_API_MONGODB_USERNAME="root"
+$env:AMBULANCE_API_MONGODB_PASSWORD="neUhaDnes"
 
 function mongo {
     docker compose --file ${ProjectRoot}/deployments/docker-compose/compose.yaml $args

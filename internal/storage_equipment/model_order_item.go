@@ -19,10 +19,10 @@ type OrderItem struct {
 	Quantity int32 `json:"quantity"`
 
 	// Price per unit of the equipment
-	UnitPrice float32 `json:"unitPrice,omitempty"`
+	UnitPrice float64 `json:"unitPrice,omitempty"`
 
 	// Total price for this item
-	TotalPrice float32 `json:"totalPrice,omitempty"`
+	TotalPrice float64 `json:"totalPrice,omitempty"`
 
 	// Manufacturer of the Equipment
 	Manufacturer string `json:"manufacturer,omitempty"`
