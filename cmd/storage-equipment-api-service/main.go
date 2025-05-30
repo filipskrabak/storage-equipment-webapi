@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -27,6 +28,19 @@ func main() {
 	}
 	engine := gin.Default()
 	engine.Use(gin.Recovery())
+
+	// Add custom error handling
+	engine.Use(func(c *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				log.Printf("PANIC in handler: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+				c.Abort()
+			}
+		}()
+		c.Next()
+	})
+
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "PUT", "POST", "DELETE", "PATCH"},
