@@ -53,15 +53,12 @@ func (o implEquipmentOrdersAPI) CreateOrder(c *gin.Context) {
         Items:               orderCreate.Items,
         RequestedBy:         orderCreate.RequestedBy,
         RequestorDepartment: orderCreate.RequestorDepartment,
-        Status:              orderCreate.Status,
+        Status:              "pending",
         Notes:               orderCreate.Notes,
         CreatedAt:           time.Now(),
         UpdatedAt:           time.Now(),
     }
 
-	if order.Status == "" {
-		order.Status = "pending" // Default
-	}
 
     if err := db.CreateDocument(context.Background(), order.Id, &order); err != nil {
         if err == db_service.ErrConflict {
