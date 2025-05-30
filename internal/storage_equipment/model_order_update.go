@@ -12,6 +12,18 @@ package storage_equipment
 
 type OrderUpdate struct {
 
+	// List of equipment items to be updated in the order
+	Items []OrderItem `json:"items,omitempty"`
+
 	// New status for the order
-	Status string `json:"status"`
+	Status string `json:"status,omitempty"`
+
+	// Name or ID of the staff member updating the order
+	RequestedBy string `json:"requestedBy,omitempty"`
+
+	// Department that requested the equipment
+	RequestorDepartment string `json:"requestorDepartment,omitempty"`
+
+	// Additional notes about the order update
+	Notes string `json:"notes,omitempty"`
 }

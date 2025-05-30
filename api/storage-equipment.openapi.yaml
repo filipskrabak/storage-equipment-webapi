@@ -500,13 +500,25 @@ components:
 
     OrderUpdate:
       type: object
-      required:
-        - status
       properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+          description: List of equipment items to be updated in the order
         status:
           type: string
           enum: [delivered, cancelled]
           description: New status for the order
+        requestedBy:
+          type: string
+          description: Name or ID of the staff member updating the order
+        requestorDepartment:
+          type: string
+          description: Department that requested the equipment
+        notes:
+          type: string
+          description: Additional notes about the order update
 
   examples:
     EquipmentListExample:
