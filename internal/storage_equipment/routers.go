@@ -65,6 +65,8 @@ type ApiHandleFunctions struct {
 
 	// Routes for the EquipmentManagementAPI part of the API
 	EquipmentManagementAPI EquipmentManagementAPI
+	// Routes for the EquipmentOrdersAPI part of the API
+	EquipmentOrdersAPI EquipmentOrdersAPI
 }
 
 func getRoutes(handleFunctions ApiHandleFunctions) []Route {
@@ -95,9 +97,39 @@ func getRoutes(handleFunctions ApiHandleFunctions) []Route {
 		},
 		{
 			"UpdateEquipment",
-			http.MethodPut,
+			http.MethodPatch,
 			"/api/equipment/:equipmentId",
 			handleFunctions.EquipmentManagementAPI.UpdateEquipment,
+		},
+		{
+			"CancelOrder",
+			http.MethodDelete,
+			"/api/orders/:orderId",
+			handleFunctions.EquipmentOrdersAPI.CancelOrder,
+		},
+		{
+			"CreateOrder",
+			http.MethodPost,
+			"/api/orders",
+			handleFunctions.EquipmentOrdersAPI.CreateOrder,
+		},
+		{
+			"GetOrderById",
+			http.MethodGet,
+			"/api/orders/:orderId",
+			handleFunctions.EquipmentOrdersAPI.GetOrderById,
+		},
+		{
+			"ListOrders",
+			http.MethodGet,
+			"/api/orders",
+			handleFunctions.EquipmentOrdersAPI.ListOrders,
+		},
+		{
+			"UpdateStatus",
+			http.MethodPatch,
+			"/api/orders/:orderId",
+			handleFunctions.EquipmentOrdersAPI.UpdateStatus,
 		},
 	}
 }

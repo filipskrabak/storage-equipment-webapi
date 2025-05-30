@@ -5,7 +5,6 @@ const mongoUser = process.env.AMBULANCE_API_MONGODB_USERNAME
 const mongoPassword = process.env.AMBULANCE_API_MONGODB_PASSWORD
 
 const database = process.env.AMBULANCE_API_MONGODB_DATABASE
-const collection = process.env.AMBULANCE_API_MONGODB_COLLECTION
 
 const retrySeconds = parseInt(process.env.RETRY_CONNECTION_SECONDS || "5") || 5;
 
@@ -27,8 +26,8 @@ const databases = connection.getDBNames()
 if (databases.includes(database)) {
     const dbInstance = connection.getDB(database)
     collections = dbInstance.getCollectionNames()
-    if (collections.includes(collection)) {
-            print(`Collection '${collection}' already exists in database '${database}'`)
+    if (collections.includes("equipment") && collections.includes("orders")) {
+            print(`Collections already exists in database '${database}'`)
         process.exit(0);
     }
 }
@@ -36,17 +35,17 @@ if (databases.includes(database)) {
 // initialize
 // create database and collection
 const db = connection.getDB(database)
-db.createCollection(collection)
+db.createCollection("equipment")
 
 // create indexes
-db[collection].createIndex({ "id": 1 })
-db[collection].createIndex({ "serialNumber": 1 }, { unique: true })
-db[collection].createIndex({ "status": 1 })
-db[collection].createIndex({ "location": 1 })
-db[collection].createIndex({ "manufacturer": 1 })
+db["equipment"].createIndex({ "id": 1 })
+db["equipment"].createIndex({ "serialNumber": 1 }, { unique: true })
+db["equipment"].createIndex({ "status": 1 })
+db["equipment"].createIndex({ "location": 1 })
+db["equipment"].createIndex({ "manufacturer": 1 })
 
 // insert sample equipment data
-let result = db[collection].insertMany([
+let result = db["equipment"].insertMany([
     {
         "id": "123e4567-e89b-12d3-a456-426614174000",
         "name": "MRI Scanner",
@@ -181,8 +180,149 @@ db[collection].createIndex({ "nextService": 1 }) // for service scheduling
 db[collection].createIndex({ "installationDate": 1 }) // for age analysis
 db[collection].createIndex({ "name": "text", "manufacturer": "text", "model": "text", "notes": "text" }) // for text search
 
-print(`Database '${database}' and collection '${collection}' initialized successfully`)
+print(`Database '${database}' and collections initialized successfully`)
 print(`Created indexes on: id, serialNumber (unique), status, location, manufacturer, nextService, installationDate, and text search`)
+
+
+print("Creating orders collection...")
+db.createCollection("orders")
+
+// Create orders indexes
+db.orders.createIndex({ "id": 1 })
+db.orders.createIndex({ "status": 1 })
+db.orders.createIndex({ "requestedBy": 1 })
+db.orders.createIndex({ "requestorDepartment": 1 })
+db.orders.createIndex({ "createdAt": 1 })
+
+// Insert sample orders data
+let ordersResult = db.orders.insertMany([
+     {
+        "id": "ord-123e4567-e89b-12d3-a456-426614174000",
+        "items": [
+            {
+                "equipmentName": "Surgical Gloves (Box of 100)",
+                "quantity": 50,
+                "unitPrice": 25.99,
+                "totalPrice": 1299.50
+            },
+            {
+                "equipmentName": "Face Masks N95 (Box of 20)",
+                "quantity": 30,
+                "unitPrice": 45.00,
+                "totalPrice": 1350.00
+            }
+        ],
+        "requestedBy": "Dr. Sarah Johnson",
+        "requestorDepartment": "Surgery",
+        "status": "pending",
+        "notes": "Urgent order for upcoming surgery schedule",
+        "createdAt": new Date("2025-05-20T09:30:00Z"),
+        "updatedAt": new Date("2025-05-20T09:30:00Z")
+    },
+    {
+        "id": "ord-223e4567-e89b-12d3-a456-426614174001",
+        "items": [
+            {
+                "equipmentName": "Digital Thermometer",
+                "quantity": 25,
+                "unitPrice": 89.99,
+                "totalPrice": 2249.75
+            }
+        ],
+        "requestedBy": "Nurse Manager Lisa Chen",
+        "requestorDepartment": "Emergency Department",
+        "status": "sent",
+        "notes": "Replacement for faulty thermometers",
+        "createdAt": new Date("2025-05-18T14:15:00Z"),
+        "updatedAt": new Date("2025-05-19T10:00:00Z")
+    },
+    {
+        "id": "ord-323e4567-e89b-12d3-a456-426614174002",
+        "items": [
+            {
+                "equipmentName": "Blood Pressure Cuff",
+                "quantity": 15,
+                "unitPrice": 125.50,
+                "totalPrice": 1882.50
+            },
+            {
+                "equipmentName": "Stethoscope",
+                "quantity": 10,
+                "unitPrice": 180.00,
+                "totalPrice": 1800.00
+            },
+            {
+                "equipmentName": "Pulse Oximeter",
+                "quantity": 20,
+                "unitPrice": 95.75,
+                "totalPrice": 1915.00
+            }
+        ],
+        "requestedBy": "Dr. Michael Rodriguez",
+        "requestorDepartment": "Cardiology",
+        "status": "delivered",
+        "notes": "Annual equipment refresh for cardiology department",
+        "createdAt": new Date("2025-05-15T11:20:00Z"),
+        "updatedAt": new Date("2025-05-20T16:45:00Z")
+    },
+    {
+        "id": "ord-423e4567-e89b-12d3-a456-426614174003",
+        "items": [
+            {
+                "equipmentName": "Wheelchair",
+                "quantity": 5,
+                "unitPrice": 450.00,
+                "totalPrice": 2250.00
+            }
+        ],
+        "requestedBy": "Physical Therapy Coordinator",
+        "requestorDepartment": "Rehabilitation",
+        "status": "pending",
+        "notes": "New wheelchairs for patient mobility program",
+        "createdAt": new Date("2025-05-21T08:00:00Z"),
+        "updatedAt": new Date("2025-05-21T08:00:00Z")
+    },
+    {
+        "id": "ord-523e4567-e89b-12d3-a456-426614174004",
+        "items": [
+            {
+                "equipmentName": "Disposable Syringes (Pack of 100)",
+                "quantity": 100,
+                "unitPrice": 35.99,
+                "totalPrice": 3599.00
+            },
+            {
+                "equipmentName": "IV Bags 0.9% Saline",
+                "quantity": 200,
+                "unitPrice": 12.50,
+                "totalPrice": 2500.00
+            }
+        ],
+        "requestedBy": "Pharmacy Director",
+        "requestorDepartment": "Pharmacy",
+        "status": "cancelled",
+        "notes": "Order cancelled due to supplier issues",
+        "createdAt": new Date("2025-05-10T13:30:00Z"),
+        "updatedAt": new Date("2025-05-12T09:15:00Z")
+    }
+]);
+
+if (ordersResult.writeError) {
+    console.error(ordersResult)
+    print(`Error when writing orders data: ${ordersResult.errmsg}`)
+} else {
+    print(`Successfully inserted ${ordersResult.insertedIds.length} order records`)
+}
+
+// // Create additional orders indexes
+db.orders.createIndex({ "updatedAt": 1 })
+db.orders.createIndex({ "items.equipmentName": 1 }) // for searching by equipment name in orders
+
+print(`Database '${database}' initialized successfully`)
+print(`Created collections: 'equipment' and 'orders'`)
+print(`Equipment indexes: id, serialNumber (unique), status, location, manufacturer, nextService, installationDate, text search`)
+print(`Orders indexes: id, status, requestedBy, requestorDepartment, createdAt, updatedAt, equipment names`)
+
 
 // exit with success
 process.exit(0);

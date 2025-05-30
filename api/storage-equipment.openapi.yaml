@@ -14,6 +14,8 @@ info:
 tags:
   - name: equipmentManagement
     description: Hospital Equipment Management API
+  - name: equipmentOrders
+    description: Hospital Equipment Orders API
 
 paths:
   "/equipment":
@@ -84,7 +86,7 @@ paths:
         "404":
           description: Equipment not found
 
-    put:
+    patch:
       tags:
         - equipmentManagement
       summary: Update equipment
@@ -136,6 +138,135 @@ paths:
           description: Equipment deleted successfully
         "404":
           description: Equipment not found
+    
+  "/orders":
+    get:
+      tags:
+        - equipmentOrders
+      summary: List all orders
+      operationId: listOrders
+      description: Retrieve a list of all equipment orders.
+      responses:
+        "200":
+          description: List of all orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+              examples:
+                response:
+                  $ref: "#/components/examples/OrderListExample"
+
+    post:
+      tags:
+        - equipmentOrders
+      summary: Create a new equipment order
+      operationId: createOrder
+      description: Create a new order request for equipment due to shortage.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderCreate"
+            examples:
+              order:
+                $ref: "#/components/examples/OrderCreateExample"
+      responses:
+        "201":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              examples:
+                response:
+                  $ref: "#/components/examples/OrderExample"
+        "400":
+          description: Invalid input
+
+  "/orders/{orderId}":
+    get:
+      tags:
+        - equipmentOrders
+      summary: Get order by ID
+      operationId: getOrderById
+      description: Retrieve details of a specific order.
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              examples:
+                response:
+                  $ref: "#/components/examples/OrderExample"
+        "404":
+          description: Order not found
+
+    patch:
+      tags:
+        - equipmentOrders
+      summary: Update order 
+      operationId: updateStatus
+      description: Update an order 
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderUpdate"
+            examples:
+              statusUpdate:
+                $ref: "#/components/examples/OrderStatusUpdateExample"
+      responses:
+        "200":
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              examples:
+                response:
+                  $ref: "#/components/examples/OrderExample"
+        "400":
+          description: Invalid input
+        "404":
+          description: Order not found
+
+    delete:
+      tags:
+        - equipmentOrders
+      summary: Cancel order
+      operationId: cancelOrder
+      description: Cancel an order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Order cancelled successfully
+        "404":
+          description: Order not found
+
 
 components:
   schemas:
@@ -274,6 +405,109 @@ components:
           type: string
           description: Additional notes about the equipment
 
+    Order:
+      type: object
+      required:
+        - id
+        - items
+        - requestedBy
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the order
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+          description: List of equipment items requested in this order
+        requestedBy:
+          type: string
+          description: Name or ID of the staff member who created the order
+        requestorDepartment:
+          type: string
+          description: Department that requested the equipment
+        status:
+          type: string
+          enum: [pending, delivered, cancelled]
+          default: pending
+          description: Current status of the order
+        notes:
+          type: string
+          description: Additional notes about the order
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the order was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the order was last updated
+    
+    OrderItem:
+      type: object
+      required:
+        - equipmentName
+        - quantity
+      properties:
+        equipmentName:
+          type: string
+          description: Name of the equipment being ordered
+        quantity:
+          type: integer
+          minimum: 1
+          description: Quantity of the equipment requested
+        unitPrice:
+          type: number
+          format: float
+          description: Price per unit of the equipment
+        totalPrice:
+          type: number
+          format: float
+          description: Total price for this item
+        manufacturer:
+          type: string
+          description: Manufacturer of the Equipment
+        serialNumber:
+          type: string
+          description: Serial number of the equipment  
+        model:
+          type: string
+          description: Model of the equipment
+
+    OrderCreate:
+      type: object
+      required:
+        - items
+        - requestedBy
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+          description: List of equipment items to be ordered
+        requestedBy:
+          type: string
+          description: Name or ID of the staff member creating the order
+        requestorDepartment:
+          type: string
+          description: Department ordering the equipment
+        notes:
+          type: string
+          description: Additional notes about the order request
+
+    OrderUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [delivered, cancelled]
+          description: New status for the order
+
   examples:
     EquipmentListExample:
       value:
@@ -324,3 +558,89 @@ components:
         lastService: "2023-05-15"
         status: "in_repair"
         notes: "Moved to Room 6. Currently being serviced due to calibration issues."
+
+    OrderCreateExample:
+      value:
+        items:
+          - equipmentName: "MRI Scanner"
+            quantity: 1
+            unitPrice: 500000.00
+            totalPrice: 500000.00
+            manufacturer: "GE Healthcare"
+            serialNumber: "MRI-2023-001"
+            model: "SIGNA Architect"
+          - equipmentName: "X-Ray Machine"
+            quantity: 1
+            unitPrice: 350000.00
+            totalPrice: 350000.00
+            manufacturer: "Siemens Healthineers"
+            serialNumber: "XR-2022-105"
+            model: "Ysio Max"
+        requestedBy: "Jana Sliter"
+        requestorDepartment: "Radiology"
+        notes: "Starting order for radiology equipment"
+
+    OrderExample:
+      value:
+        id: "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
+        items:
+          - equipmentName: "MRI Scanner"
+            quantity: 1
+            unitPrice: 500000.00
+            totalPrice: 500000.00
+            manufacturer: "GE Healthcare"
+            serialNumber: "MRI-2023-001"
+            model: "SIGNA Architect"
+          - equipmentName: "X-Ray Machine"
+            quantity: 1
+            unitPrice: 350000.00
+            totalPrice: 350000.00
+            manufacturer: "Siemens Healthineers"
+            serialNumber: "XR-2022-105"
+            model: "Ysio Max"
+        requestedBy: "Jana Sliter"
+        status: "pending"
+        createdAt: "2025-05-29T10:00:00Z"
+        updatedAt: "2025-05-29T12:00:00Z"
+
+    OrderListExample:
+      value:
+        - id: "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
+          items:
+          - equipmentName: "MRI Scanner"
+            quantity: 1
+            unitPrice: 500000.00
+            totalPrice: 500000.00
+            manufacturer: "GE Healthcare"
+            serialNumber: "MRI-2023-001"
+            model: "SIGNA Architect"
+          - equipmentName: "X-Ray Machine"
+            quantity: 1
+            unitPrice: 350000.00
+            totalPrice: 350000.00
+            manufacturer: "Siemens Healthineers"
+            serialNumber: "XR-2022-105"
+            model: "Ysio Max"
+          requestedBy: "Jana Sliter"
+          requestorDepartment: "Radiology"
+          status: "pending"
+          createdAt: "2025-05-29T10:00:00Z"
+          updatedAt: "2025-05-29T12:00:00Z"
+        - id: "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
+          items:
+          - equipmentName: "Defiblirator"
+            quantity: 2
+            unitPrice: 15000.00
+            totalPrice: 30000.00
+            manufacturer: "Philips"
+            serialNumber: "DEF-2023-007"
+            model: "HeartStart FRx"
+          requestedBy: "Andrej Novak"
+          requestorDepartment: "Cardiology"
+          status: "delivered"
+          createdAt: "2025-04-01T14:25:13Z"
+          updatedAt: "2025-05-01T08:00:00Z"
+
+    OrderStatusUpdateExample:
+      value:
+        status: "pending"

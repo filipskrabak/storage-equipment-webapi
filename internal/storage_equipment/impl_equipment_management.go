@@ -18,7 +18,7 @@ func NewEquipmentManagementApi() EquipmentManagementAPI {
 }
 
 func (o implEquipmentManagementAPI) CreateEquipment(c *gin.Context) {
-	value, exists := c.Get("db_service")
+	value, exists := c.Get("equipment_db_service")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database service not available"})
 		return
@@ -84,7 +84,7 @@ func (o implEquipmentManagementAPI) CreateEquipment(c *gin.Context) {
 }
 
 func (o implEquipmentManagementAPI) DeleteEquipment(c *gin.Context) {
-	value, exists := c.Get("db_service")
+	value, exists := c.Get("equipment_db_service")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database service not available"})
 		return
@@ -115,7 +115,7 @@ func (o implEquipmentManagementAPI) DeleteEquipment(c *gin.Context) {
 }
 
 func (o implEquipmentManagementAPI) GetAllEquipment(c *gin.Context) {
-	value, exists := c.Get("db_service")
+	value, exists := c.Get("equipment_db_service")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database service not available"})
 		return
@@ -145,7 +145,7 @@ func (o implEquipmentManagementAPI) GetAllEquipment(c *gin.Context) {
 }
 
 func (o implEquipmentManagementAPI) GetEquipmentById(c *gin.Context) {
-	value, exists := c.Get("db_service")
+	value, exists := c.Get("equipment_db_service")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database service not available"})
 		return
@@ -177,7 +177,7 @@ func (o implEquipmentManagementAPI) GetEquipmentById(c *gin.Context) {
 }
 
 func (o implEquipmentManagementAPI) UpdateEquipment(c *gin.Context) {
-	value, exists := c.Get("db_service")
+	value, exists := c.Get("equipment_db_service")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database service not available"})
 		return

@@ -33,7 +33,7 @@ type EquipmentManagementAPI interface {
     // Get equipment by ID 
      GetEquipmentById(c *gin.Context)
 
-    // UpdateEquipment Put /api/equipment/:equipmentId
+    // UpdateEquipment Patch /api/equipment/:equipmentId
     // Update equipment 
      UpdateEquipment(c *gin.Context)
 
