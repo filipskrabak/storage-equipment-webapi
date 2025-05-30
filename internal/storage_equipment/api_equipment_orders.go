@@ -33,7 +33,7 @@ type EquipmentOrdersAPI interface {
     // List all orders 
      ListOrders(c *gin.Context)
 
-    // UpdateStatus Patch /api/orders/:orderId
+    // UpdateStatus Put /api/orders/:orderId
     // Update order 
      UpdateStatus(c *gin.Context)
 

@@ -86,7 +86,7 @@ paths:
         "404":
           description: Equipment not found
 
-    patch:
+    put:
       tags:
         - equipmentManagement
       summary: Update equipment
@@ -138,7 +138,7 @@ paths:
           description: Equipment deleted successfully
         "404":
           description: Equipment not found
-    
+
   "/orders":
     get:
       tags:
@@ -213,12 +213,12 @@ paths:
         "404":
           description: Order not found
 
-    patch:
+    put:
       tags:
         - equipmentOrders
-      summary: Update order 
+      summary: Update order
       operationId: updateStatus
-      description: Update an order 
+      description: Update an order
       parameters:
         - in: path
           name: orderId
@@ -445,7 +445,7 @@ components:
           type: string
           format: date-time
           description: Date and time when the order was last updated
-    
+
     OrderItem:
       type: object
       required:
@@ -472,7 +472,7 @@ components:
           description: Manufacturer of the Equipment
         serialNumber:
           type: string
-          description: Serial number of the equipment  
+          description: Serial number of the equipment
         model:
           type: string
           description: Model of the equipment

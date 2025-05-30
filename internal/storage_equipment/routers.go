@@ -97,7 +97,7 @@ func getRoutes(handleFunctions ApiHandleFunctions) []Route {
 		},
 		{
 			"UpdateEquipment",
-			http.MethodPatch,
+			http.MethodPut,
 			"/api/equipment/:equipmentId",
 			handleFunctions.EquipmentManagementAPI.UpdateEquipment,
 		},
@@ -127,7 +127,7 @@ func getRoutes(handleFunctions ApiHandleFunctions) []Route {
 		},
 		{
 			"UpdateStatus",
-			http.MethodPatch,
+			http.MethodPut,
 			"/api/orders/:orderId",
 			handleFunctions.EquipmentOrdersAPI.UpdateStatus,
 		},

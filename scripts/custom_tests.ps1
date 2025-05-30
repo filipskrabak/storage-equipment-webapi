@@ -1,5 +1,5 @@
 param(
-    [string]$BaseUrl = "http://localhost:8080/api"
+    [string]$BaseUrl = "http://localhost:5000/api"
 )
 
 Write-Host "Testing Storage Equipment API at $BaseUrl" -ForegroundColor Green
