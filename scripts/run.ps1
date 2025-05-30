@@ -9,7 +9,7 @@ if (-not $command)  {
 $ProjectRoot = "${PSScriptRoot}/.."
 
 $env:AMBULANCE_API_ENVIRONMENT="Development"
-$env:AMBULANCE_API_PORT="8080"
+$env:AMBULANCE_API_PORT="5000"
 $env:AMBULANCE_API_MONGODB_USERNAME="admin"
 $env:AMBULANCE_API_MONGODB_PASSWORD="admin"
 
